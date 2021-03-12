@@ -2,17 +2,17 @@
 
 This is a project that was developed during the software development course at the OTH Regensburg.
 
-### Testing
+## Testing
 
-1. Clone repository
-```
+1. Clone repository<br>
+``
 git clone git@github.com:VitalGo/OTH-SW-ViGoPay
-```
+``
 
-2. Change directory
-```
+2. Change directory<br>
+``
 cd OTH-SW-ViGoPay
-```
+``
 
 3. Install Banking Service library JAR<br>
 ```
@@ -21,12 +21,15 @@ mvn install:install-file -Dfile=src/main/resources/banking_source.jar -DgroupId=
 
 4. Set environment variables or edit [application-local.properties](./../application-local.properties)
 
-5. Build Jar
-```
+5. Build Jar<br>
+``
 mvn package
-```
+``
 
 6.
+``
+mvn spring-boot:run
+``
 
 
 
