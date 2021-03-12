@@ -26,7 +26,7 @@ mvn install:install-file -Dfile=src/main/resources/banking_source.jar -DgroupId=
 mvn package
 ``
 
-6.
+6. Run application<br>
 ``
 mvn spring-boot:run
 ``
