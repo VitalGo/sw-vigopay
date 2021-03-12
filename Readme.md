@@ -6,18 +6,30 @@ This is a project that was developed during the software development course at t
 
 1. Clone repository
 ```
-git clone git@github.com:VitalGo/oth-sw-vigopay
+git clone git@github.com:VitalGo/OTH-SW-ViGoPay
 ```
 
 2. Change directory
 ```
-cd oth-sw-vigopay
+cd OTH-SW-ViGoPay
 ```
 
 3. Install Banking Service library JAR<br>
 ```
 mvn install:install-file -Dfile=src/main/resources/banking_source.jar -DgroupId=de.othr.sw -DartifactId=bank -Dversion=0.0.1SNAPSHOT -Dpackaging=jar
 ```
+
+4. Set environment variables or edit [application-local.properties](./../application-local.properties)
+
+5. Build Jar
+```
+mvn package
+```
+
+6.
+
+
+
 
 
 
