@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="/css/pagination.css">
+
+    <title>Aktivitäten</title>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"/>
+<div class="content-div">
+    <span class="text-primary fs20"><strong>Meine Aktivitäten</strong></span>
+    <br>
+    <br>
+    <div id="transfersSuccessMessage" class="alert alert-success" role="alert"
+         th:style="${successIsVisible} ? 'display:block' : 'display:none'" th:text="${successText}"/>
+    <span th:style="${showTransfersInfo} ? 'display:block' : 'display:none'" class="text-white"><strong>Sie haben keine Transaktionen </strong></span>
+    <div th:style="${requestedTransfersDiv} ? 'display:block' : 'display:none'">
+        <span class="text-white fs16"><strong>Ausstehende Transaktionen </strong></span>
+        <br>
+        <br>
+        <div id="transferRRFailedWarning" class="alert alert-danger" role="alert"
+             th:style="${alertRRIsVisible} ? 'display:block' : 'display:none'" th:text="${alertRRText}"/>
+        <div th:replace="fragments/transfer :: transfersList(transferList=${transferRequested})"/>
+
+        <nav aria-label="Page navigation example" th:style="${totalPagesReq gt 1} ? 'display:block' : 'display:none'">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${totalPagesReq eq 0 || currentPageReq eq 1} ? 'disabled' : ''">
+                    <a class="page-link" th:if="${currentPageReq != 1}"
+                       th:href="@{${'/transfers/list'}(pageReq=${currentPageReq - 1}, pageDone=${currentPageDone})}">&laquo;</a>
+                    <a class="page-link" th:if="${currentPageReq == 1}" href="javascript:void(0);">&laquo;</a>
+                </li>
+
+                <li class="page-item" th:each="pageNr : ${#numbers.sequence(1, totalPagesReq)}"
+                    th:classappend="${currentPageReq eq pageNr}? 'active' : ''">
+                    <a class="page-link" th:if="${currentPageReq  eq pageNr}" href="javascript:void(0);"
+                       th:text="${pageNr}"></a>
+                    <a class="page-link" th:if="${not (currentPageReq  eq pageNr)}"
+                       th:href="@{${'/transfers/list'}(pageReq=${pageNr}, pageDone=${currentPageDone})}"
+                       th:text="${pageNr}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPageReq ge totalPagesReq} ? 'disabled' : ''">
+                    <a class="page-link" th:if="${currentPageReq != totalPagesReq}"
+                       th:href="@{${'/transfers/list'}(pageReq=${currentPageReq + 1}, pageDone=${currentPageDone})}">&raquo;</a>
+                    <a class="page-link" th:if="${currentPageReq ge totalPagesReq}"
+                       href="javascript:void(0);">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+        <br>
+        <br>
+    </div>
+    <div th:style="${doneTransfersDiv} ? 'display:block' : 'display:none'">
+        <span class="text-white fs16"><strong>Transaktionen </strong></span>
+        <br>
+        <br>
+        <div th:replace="fragments/transfer :: transfersList(transferList=${transferDone})"/>
+
+        <nav aria-label="Page navigation example" th:style="${totalPagesDone gt 1} ? 'display:block' : 'display:none'">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${totalPagesDone eq 0 || currentPageDone eq 1} ? 'disabled' : ''">
+                    <a class="page-link" th:if="${currentPageDone != 1}"
+                       th:href="@{${'/transfers/list'}(pageDone=${currentPageDone - 1}, pageReq=${currentPageReq})}">&laquo;</a>
+                    <a class="page-link" th:if="${currentPageDone == 1}" href="javascript:void(0);">&laquo;</a>
+                </li>
+
+                <li class="page-item" th:each="pageNr : ${#numbers.sequence(1, totalPagesDone)}"
+                    th:classappend="${currentPageDone eq pageNr}? 'active' : ''">
+                    <a class="page-link" th:if="${currentPageDone  eq pageNr}" href="javascript:void(0);"
+                       th:text="${pageNr}"></a>
+                    <a class="page-link" th:if="${not (currentPageDone  eq pageNr)}"
+                       th:href="@{${'/transfers/list'}(pageDone=${pageNr}, pageReq=${currentPageReq})}"
+                       th:text="${pageNr}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPageDone ge totalPagesDone} ? 'disabled' : ''">
+                    <a class="page-link" th:if="${currentPageDone != totalPagesDone}"
+                       th:href="@{${'/transfers/list'}(pageDone=${currentPageDone + 1}, pageReq=${currentPageReq})}">&raquo;</a>
+                    <a class="page-link" th:if="${currentPageDone ge totalPagesDone}"
+                       href="javascript:void(0);">&raquo;</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+
+</body>
+</html>

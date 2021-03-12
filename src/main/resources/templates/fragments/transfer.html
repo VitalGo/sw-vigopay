@@ -1,0 +1,143 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<!-- form for new transfers -->
+<div th:fragment="newTransfer">
+    <div id="searchForReceiver" th:style="${searchForAccount} ? 'display:block' : 'display:none'">
+        <span class="text-primary" style="font-size: 20px; font-weight: bold;" th:text="${pageTitle}">Geld senden</span>
+        <br>
+        <br>
+        <form th:action="@{${path} + ${email}}" method="get">
+            <div class="form-group">
+                <input name="email" type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp"
+                       placeholder="E-Mail-Adresse Empfänger" required>
+            </div>
+            <div id="makeTransferWarning" class="alert alert-danger" role="alert"
+                 th:style="${alertIsVisible} ? 'display:block' : 'display:none'" th:text="${alertText}"/>
+
+            <button id="continueButton" type="submit" class="btn btn-outline-primary" style="display: block;">Weiter
+            </button>
+        </form>
+    </div>
+
+    <div id="sendTo" th:style="${moreInformations} ? 'display:block' : 'display:none'">
+        <span class="text-white" style="font-size: 16px;" th:text="${actionText}"></span>
+        <span class="text-white" style="font-size: 20px; font-weight: bold;" th:text="${accountName}"></span>
+        <br>
+        <br>
+        <form th:action="@{${path} + ${accountEmail}}" method="post">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col" style="max-width: 90px;">
+                        <input name="euro" type="number" class="form-control" id="inputEuro"
+                               aria-describedby="euroHelp"
+                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                               maxlength="6"
+                               placeholder="1" min="1" max="999999" required>
+                    </div>
+                    <span class="text-white" style="font-size: 20px;">,</span>
+                    <div class="col" style="max-width: 60px;">
+                        <input name="cent" type="number" class="form-control" id="inputCent"
+                               aria-describedby="centHelp"
+                               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                               maxlength="2"
+                               placeholder="00" min="0" max="99" required>
+                    </div>
+                    <span class="text-white" style="font-size: 28px;">EUR</span>
+                </div>
+                <small class="form-text text-muted">Der eingegebene Betrag muss mindestens 1,00 EUR betragen</small>
+            </div>
+            <div class="form-group">
+                    <textarea name="description" type="text" class="form-control" id="formControlTextarea" rows="3"
+                              maxlength="255"
+                              placeholder="Hier können Sie eine Nachricht an den Empfänger einfügen."></textarea>
+                <small class="form-text text-muted">Maximal 255 Zeichen</small>
+            </div>
+            <div id="transferFailedWarning" class="alert alert-danger" role="alert"
+                 th:style="${warningIsVisible} ? 'display:block' : 'display:none'" th:text="${warningText}"/>
+
+            <button id="sendButton" type="submit" class="btn btn-outline-primary" style="display: block;">Senden
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- table for requested and processed transfers -->
+<div th:fragment="transfersList">
+    <table class="table cust-table">
+        <thead>
+        <tr style="background: #353946;">
+            <th class="text-primary width-30p" scope="col" style="border-style: none none solid none;">Zahlender</th>
+            <th class="text-primary width-30p" scope="col" style="border-style: none none solid none;">Empfänger</th>
+            <th class="text-primary width-20p" scope="col"
+                style="text-align: center; border-style: none none solid none;">Status
+            </th>
+            <th class="text-primary width-20p" scope="col"
+                style="text-align: right; border-style: none none solid none;">Betrag
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="transfer, rowStat: ${transferList}">
+            <tr id="transfers-table-row" data-toggle="collapse" th:attr="data-target='#accordion_'+${transfer.id}" class="clickable"
+                style="background: #484c5a;">
+                <td th:text="${transfer.payerAccount.user.generateUsername()}">Username</td>
+                <td th:text="${transfer.receiverAccount.user.generateUsername()}">Firma</td>
+                <div th:switch="${transfer.state}">
+                    <td th:case="${T(com.othr.swvigopay.entity.State).DONE}" style="text-align: center"><span
+                            class="badge badge-success">AUSGEFÜHRT</span></td>
+                    <td th:case="${T(com.othr.swvigopay.entity.State).REQUESTED}" style="text-align: center"><span
+                            class="badge badge-warning">ANGEFRAGT</span></td>
+                    <td th:case="${T(com.othr.swvigopay.entity.State).DECLINED}" style="text-align: center"><span
+                            class="badge badge-danger">ABGELEHNT</span></td>
+                </div>
+                <div th:switch="${transfer.receiverAccount.user.email}">
+                    <td th:case="${currentUserEmail}" style="text-align: right;">
+                        <span style="color: springgreen"
+                              th:text="'+' + ${transfer.amount}">Betrag</span><span> EUR</span>
+                    </td>
+                    <td th:case="*" style="text-align: right;">
+                        <span style="color: red" th:text="'-' + ${transfer.amount}">Betrag</span><span> EUR</span>
+                    </td>
+                </div>
+            </tr>
+            <tr th:id="'accordion_'+${transfer.id}" class="collapse" style="background: #535764;">
+                <td colspan="5">
+                    <div th:style="${transfer.requestTime == null} ? 'display:none' : 'display:block'">
+                        <span class="text-primary fs14"><strong>Angefragt: </strong></span><br>
+                        <span class="text-white fs14"
+                              th:text="${{#dates.format(transfer.requestTime, 'dd.MM.yyyy HH:mm')}}"></span>
+                        <br>
+                    </div>
+                    <div th:style="${transfer.processedTime == null} ? 'display:none' : 'display:block'">
+                        <div th:switch="${transfer.state}">
+                            <span th:case="${T(com.othr.swvigopay.entity.State).DONE}"
+                                  class="text-primary fs14"><strong>Ausgeführt: </strong></span>
+                            <span th:case="${T(com.othr.swvigopay.entity.State).DECLINED}"
+                                  class="text-primary fs14"><strong>Abgelehnt: </strong></span>
+                        </div>
+                        <span class="text-white" style="font-size: 14px;"
+                              th:text="${{#dates.format(transfer.processedTime, 'dd.MM.yyyy HH:mm')}}"></span>
+                        <br>
+                    </div>
+                    <div th:style="${transfer.description == ''} ? 'display:none' : 'display:block'">
+                        <span class="text-primary fs14"><strong>Beschreibung: </strong></span><br>
+                        <span class="text-white fs14" th:text="${transfer.description}"></span>
+                    </div>
+                    <div th:style="${transfer.state == T(com.othr.swvigopay.entity.State).REQUESTED && transfer.payerAccount.user.email == currentUserEmail} ? 'display:block' : 'display:none'">
+                        <form th:action="@{'/transfers/request/decline/' + ${transfer.id}}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm float-right" style="margin-left: 10px;">
+                                Ablehnen
+                            </button>
+                        </form>
+                        <form th:action="@{'/transfers/request/accept/' + ${transfer.id}}" method="post">
+                            <button type="submit" class="btn btn-success btn-sm float-right">Annehmen</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>

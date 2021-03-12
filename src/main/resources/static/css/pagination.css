@@ -1,0 +1,36 @@
+.page-link {
+    color: white;
+    background-color: #484C5A;
+    border: 1px solid #363A45;
+    transition-duration: 250ms;
+}
+
+.page-item.disabled .page-link {
+    color: grey;
+    pointer-events: none;
+    cursor: auto;
+    background-color: #484C5A;
+    border-color: #363A45;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #007BFF;
+    background-color: #484C5A;
+    border-color: #007BFF;
+}
+
+.page-link:focus, .page-link:hover {
+    color: white;
+    text-decoration: none;
+    background-color: #007BFF;
+    border-color: #007BFF;
+}
+
+.page-item:last-child .page-link {
+    border-radius: 0 10px 10px 0;
+}
+
+.page-item:first-child .page-link {
+    border-radius: 10px 0 0 10px;
+}
