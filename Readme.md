@@ -4,7 +4,7 @@ This is a project that was developed during the software development course at t
 
 ## Testing
 
-1. Install Banking Service library JAR into the root directory<br>
+1. Install Banking Service library JAR<br>
 ```
 mvn install:install-file -Dfile=src/main/resources/banking_source.jar -DgroupId=de.othr.sw -DartifactId=bank -Dversion=0.0.1SNAPSHOT -Dpackaging=jar
 ```
