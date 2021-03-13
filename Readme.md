@@ -9,14 +9,15 @@ This is a project that was developed during the software development course at t
 mvn install:install-file -Dfile=src/main/resources/banking_source.jar -DgroupId=de.othr.sw -DartifactId=bank -Dversion=0.0.1SNAPSHOT -Dpackaging=jar
 ```
 
-2. Set environment variables or edit [application-local.properties](src/main/resources/application-local.properties)
+2. Edit the [application.properties](src/main/resources/application.properties)
+- ``spring.datasource.url=``
+- ``spring.datasource.username=``
+- ``spring.datasource.password=``
+- ``password-salt=``
+- ``vigopay-iban=``
 
-3. Build Jar<br>
-```
-mvn package
-```
 
-4. Run application<br>
+3. Run application<br>
 ```
 mvn spring-boot:run
 ```
