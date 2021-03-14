@@ -1,6 +1,6 @@
 # Payment Service (ViGoPay)
 
-This is a project that was developed during the software development course at the OTH Regensburg.
+This is a project that was developed during the **software development** course at the OTH Regensburg.
 
 ## Testing
 
